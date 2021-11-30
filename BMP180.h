@@ -57,7 +57,7 @@
  *     
  *     while(1) 
  *     {        
- *         if (bmp180.ReadData(&pressure, &temperature))
+ *         if (bmp180.ReadData(&temperature, &pressure))
  *             printf("Pressure(hPa): %8.2f \t Temperature(C): %8.2f\n", pressure, temperature);  
  *         wait(1);
  *     }
@@ -80,7 +80,7 @@ public:
      * @param i2c object
      * @param address: I2C slave address 
      */
-    BMP180(I2C& i2c, int address = BMP180_I2C_ADDRESS); 
+    //BMP180(I2C& i2c, int address = BMP180_I2C_ADDRESS); 
 
     /** Initialization: set member values and read BMP180 calibration parameters
      * @param altitude (in meter)

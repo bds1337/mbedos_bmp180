@@ -30,14 +30,14 @@ BMP180::BMP180(PinName sda, PinName scl, int address)
     m_pressure = UNSET_BMP180_PRESSURE_VALUE;  
 }
 
-BMP180::BMP180(I2C& i2c, int address)
-   : m_i2c(i2c), m_addr(address)
-{
-    m_altitude = 0;
-    m_oss = BMP180_OSS_NORMAL; 
-    m_temperature = UNSET_BMP180_TEMPERATURE_VALUE;
-    m_pressure = UNSET_BMP180_PRESSURE_VALUE;  
-}
+// BMP180::BMP180(I2C& i2c, int address)
+//    : m_i2c(i2c), m_addr(address)
+// {
+//     m_altitude = 0;
+//     m_oss = BMP180_OSS_NORMAL; 
+//     m_temperature = UNSET_BMP180_TEMPERATURE_VALUE;
+//     m_pressure = UNSET_BMP180_PRESSURE_VALUE;  
+// }
 
 int  BMP180::Initialize(float altitude, int overSamplingSetting)
 {
@@ -53,7 +53,7 @@ int  BMP180::Initialize(float altitude, int overSamplingSetting)
     data[0]=0xAA;
     errors = m_i2c.write(m_addr, data, 1);  // set the eeprom pointer position to 0xAA
     errors += m_i2c.read(m_addr, data, 22); // read 11 x 16 bits at this position 
-    wait_ms(10);
+    ThisThread::sleep_for(10ms);
     
     // store calibration data for further calculus  
     ac1 = data[0]  << 8 | data[1];
@@ -119,7 +119,7 @@ int BMP180::ReadRawTemperature(long* pUt)
     data[1] = 0x2E;
     errors = m_i2c.write(m_addr, data, 2); // write 0XF2 into reg 0XF4
 
-    wait_ms(4.5F);
+    ThisThread::sleep_for(5ms);
 
     // read raw temperature data
     data[0] = 0xF6;
@@ -154,10 +154,10 @@ int BMP180::ReadRawPressure(long* pUp)
 
     switch (m_oss)
     {
-        case BMP180_OSS_ULTRA_LOW_POWER:        wait_ms(4.5); break;
-        case BMP180_OSS_NORMAL:                 wait_ms(7.5); break;
-        case BMP180_OSS_HIGH_RESOLUTION:        wait_ms(13.5); break;
-        case BMP180_OSS_ULTRA_HIGH_RESOLUTION:  wait_ms(25.5); break;
+        case BMP180_OSS_ULTRA_LOW_POWER:        ThisThread::sleep_for(5ms); break;
+        case BMP180_OSS_NORMAL:                 ThisThread::sleep_for(8ms); break;
+        case BMP180_OSS_HIGH_RESOLUTION:        ThisThread::sleep_for(14ms); break;
+        case BMP180_OSS_ULTRA_HIGH_RESOLUTION:  ThisThread::sleep_for(16ms); break;
     }
 
     // read raw pressure data
